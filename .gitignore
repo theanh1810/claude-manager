@@ -1,0 +1,34 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Local env
+.env
+.env.local
+
+# Build artifacts
+*.dmg
+*.app/
+release/
+
+# Test evidence (ephemeral)
+docs/qa/runs/
+docs/qa/preflight/
+playwright-report/
+test-results/
+!docs/qa/baselines/
+!docs/qa/history.log
+
+# Throwaway run output of agents
+.cm-tmp/
+
+# Local tooling output
+.playwright-mcp/
+tsconfig.tsbuildinfo

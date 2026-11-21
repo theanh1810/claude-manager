@@ -1,0 +1,84 @@
+# CI for claude-manager.
+#
+# Split into two jobs so the cheap frontend job runs on ubuntu (no Tauri build
+# needed, jsdom is enough for vitest) and the rust job runs on macos-15 where
+# the project actually targets. Splitting also means a frontend-only change
+# does not pay the rust toolchain warm-up cost.
+
+name: CI
+
+# Triggers on main or master to be branch-name agnostic.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+# Cancel in-flight runs on the same ref when a new commit lands — saves minutes
+# during quick-fix push cycles.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend (lint + typecheck + vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # pnpm/action-setup@v4's bundled installer crashes on this repo's
+      # pnpm-workspace.yaml (onlyBuiltDependencies), so install pnpm with npm.
+      - name: Install pnpm
+        run: npm install -g pnpm@10.33.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit + component tests
+        run: pnpm test
+
+  rust:
+    name: Rust (fmt + clippy + cargo test)
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: src-tauri
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # Cache target/ + ~/.cargo for downstream PR runs. Saves 4-6 min per run.
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install macOS build deps
+        run: brew install cmake
+
+      - name: cargo fmt --check
+        run: cargo fmt --all -- --check
+
+      - name: cargo clippy
+        run: cargo clippy --locked --all-targets -- -D warnings
+
+      - name: cargo test
+        run: cargo test --locked --all-targets

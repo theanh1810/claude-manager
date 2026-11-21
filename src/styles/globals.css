@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+
+    --surface-0: 255 255 255;  --surface-1: 248 250 252;  --surface-2: 241 245 249;  --surface-3: 226 232 240;
+    --line: 226 232 240;  --line-strong: 203 213 225;  --line-control: 124 139 161;
+    --ink: 15 23 42;  --ink-muted: 71 85 105;  --ink-subtle: 91 106 128;  --ink-disabled: 148 163 184;
+
+    --accent: 79 70 229;  --accent-hover: 67 56 202;  --accent-active: 55 48 163;  --accent-fg: 67 56 202;
+    --accent-subtle: 238 242 255;  --accent-subtle-hover: 224 231 255;  --on-accent: 255 255 255;  --ring: 79 70 229;
+
+    --success-bg: 236 253 245;  --success-fg: 6 95 70;   --success-line: 167 243 208;  --success-solid: 4 120 87;   --success-solid-hover: 6 95 70;
+    --danger-bg: 255 241 242;   --danger-fg: 159 18 57;  --danger-line: 254 205 211;   --danger-solid: 190 18 60;   --danger-solid-hover: 159 18 57;
+    --warning-bg: 255 251 235;  --warning-fg: 146 64 14; --warning-line: 253 230 138;  --warning-solid: 180 83 9;   --warning-solid-hover: 146 64 14;
+    --info-bg: 240 249 255;     --info-fg: 7 89 133;     --info-line: 186 230 253;
+
+    --progress-fill: 4 120 87;  --tooltip-bg: 15 23 42;  --tooltip-fg: 248 250 252;  --switch-knob: 255 255 255;
+    --scrim: 15 23 42;  --scrim-a: 0.5;
+
+    --diff-add-bg: 220 252 231;  --diff-add-gutter: 187 247 208;  --diff-add-word: 134 239 172;
+    --diff-del-bg: 255 228 230;  --diff-del-gutter: 254 205 211;  --diff-del-word: 253 164 175;
+
+    --shadow-popover: 0 1px 2px rgb(15 23 42 / 0.06), 0 4px 12px rgb(15 23 42 / 0.10);
+    --shadow-dialog: 0 16px 40px rgb(15 23 42 / 0.18);
+
+    --sidebar-w: 220px;  --rail-w: 56px;  --pane-list-w: 320px;  --header-h: 48px;
+    --slot-status-h: 56px;  --notice-w: 440px;
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+
+    --dur-fast: 120ms;  --dur-base: 160ms;  --dur-slow: 200ms;  --dur-exit: 100ms;
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);  --ease-in: cubic-bezier(0.4, 0, 1, 1);  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface-0: 13 17 23;  --surface-1: 22 27 34;  --surface-2: 33 38 45;  --surface-3: 45 51 59;
+      --line: 48 54 61;  --line-strong: 61 68 77;  --line-control: 110 118 129;
+      --ink: 230 237 243;  --ink-muted: 157 167 179;  --ink-subtle: 139 148 158;  --ink-disabled: 110 118 129;
+
+      --accent-fg: 165 180 252;  --accent-subtle: 28 35 65;  --accent-subtle-hover: 36 44 82;  --ring: 165 180 252;
+
+      --success-bg: 16 40 29;   --success-fg: 110 231 183;  --success-line: 29 77 55;
+      --danger-bg: 44 21 24;    --danger-fg: 253 164 175;   --danger-line: 92 42 49;
+      --warning-bg: 43 33 16;   --warning-fg: 252 211 77;   --warning-line: 84 66 26;
+      --info-bg: 15 37 54;      --info-fg: 125 211 252;     --info-line: 30 74 102;
+
+      --progress-fill: 52 211 153;  --tooltip-bg: 230 237 243;  --tooltip-fg: 13 17 23;  --switch-knob: 13 17 23;
+      --scrim: 1 4 9;  --scrim-a: 0.7;
+
+      --diff-add-bg: 18 48 31;  --diff-add-gutter: 23 64 42;  --diff-add-word: 30 106 63;
+      --diff-del-bg: 58 26 31;  --diff-del-gutter: 77 34 41;  --diff-del-word: 143 42 58;
+
+      --shadow-popover: 0 0 0 1px rgb(255 255 255 / 0.06), 0 6px 16px rgb(0 0 0 / 0.5);
+      --shadow-dialog: 0 0 0 1px rgb(255 255 255 / 0.06), 0 20px 48px rgb(0 0 0 / 0.6);
+    }
+  }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    background: rgb(var(--surface-0));
+    color: rgb(var(--ink));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 13px text lives on the body only: the root stays 16px so every rem class keeps its size (design D5). */
+  body {
+    font-size: 13px;
+    line-height: 20px;
+    overscroll-behavior: none;
+  }
+
+  aside, header, button, [role='tab'], kbd {
+    user-select: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: 2px;
+  }
+  .focus-inset:focus-visible {
+    outline-offset: -2px;
+  }
+  [role='listbox']:focus-visible {
+    outline: none;
+  }
+  [role='listbox']:focus-visible [aria-selected='true'] {
+    outline: 2px solid rgb(var(--ring));
+    outline-offset: -2px;
+  }
+
+  ::selection {
+    background: rgb(var(--accent-subtle-hover));
+  }
+
+  [class~='overflow-auto'], [class~='overflow-y-auto'] {
+    scrollbar-gutter: stable;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line-strong));
+    border-radius: 5px;
+    border: 2px solid rgb(var(--surface-0));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--ink-subtle));
+  }
+}
+
+@layer components {
+  .md {
+    max-width: 72ch;
+    font-size: 13px;
+    line-height: 20px;
+    color: rgb(var(--ink));
+    overflow-wrap: anywhere;
+  }
+  .md > :first-child { margin-top: 0; }
+  .md h1 { font-size: 18px; line-height: 26px; font-weight: 600; margin: 16px 0 8px; }
+  .md h2 { font-size: 15px; line-height: 22px; font-weight: 600; margin: 16px 0 8px; }
+  .md h3, .md h4 { font-size: 13px; line-height: 20px; font-weight: 600; margin: 12px 0 4px; }
+  .md p { margin: 0 0 8px; }
+  .md ul, .md ol { margin: 0 0 8px; padding-left: 20px; }
+  .md ul { list-style: disc; }
+  .md ol { list-style: decimal; }
+  .md li { margin: 2px 0; }
+  .md a { color: rgb(var(--accent-fg)); text-decoration: underline; }
+  .md code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: rgb(var(--surface-2));
+    padding: 0 4px;
+    border-radius: 4px;
+  }
+  .md pre {
+    background: rgb(var(--surface-1));
+    border: 1px solid rgb(var(--line));
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .md pre code { background: transparent; padding: 0; }
+  .md blockquote {
+    border-left: 2px solid rgb(var(--line-strong));
+    padding-left: 12px;
+    color: rgb(var(--ink-muted));
+    margin: 0 0 8px;
+  }
+  .md table { border-collapse: collapse; margin: 0 0 8px; display: block; overflow-x: auto; }
+  .md th { background: rgb(var(--surface-1)); font-weight: 600; text-align: left; }
+  .md th, .md td { border-bottom: 1px solid rgb(var(--line)); padding: 4px 8px; }
+  .md hr { border: 0; border-top: 1px solid rgb(var(--line)); margin: 12px 0; }
+  .md img { max-width: 100%; }
+}
+
+/* Respect the OS setting: no shimmer, fade, scale or rotate for those who ask. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-pulse-soft {
+    animation: none;
+    opacity: 0.7;
+  }
+}
